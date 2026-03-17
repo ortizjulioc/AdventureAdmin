@@ -1,3 +1,8 @@
+## Pasos Faltantes
+
+ - Hacer fork
+ - Clonar el fork
+ - 
 # Tarea: Implementar funcionalidad Windows Forms — AdventureAdmin
 
 ## Objetivo
