@@ -1,5 +1,10 @@
 # Tarea: Implementar funcionalidad Windows Forms — AdventureAdmin
 
+
+## Pasos faltantes
+-Hacer fork
+-Clonar el fork
+-Hacer el branch git branch -b issue/16_culture
 ## Objetivo
 
 Implementar la pantalla de lista y el formulario de creacion para una entidad asignada,
