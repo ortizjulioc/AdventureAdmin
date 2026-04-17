@@ -78,6 +78,7 @@ static class Program
         services.AddTransient<ShipMethodService>();
         services.AddTransient<PersonService>();
         services.AddTransient<DepartmentService>();
+        services.AddTransient<CultureService>();
         services.AddTransient<LocationService>();
         //services.AddTransient<CreditCardService>();
         //services.AddTransient<ProductCategoryService>();
@@ -90,7 +91,6 @@ static class Program
         //services.AddTransient<AddressTypeService>();
         //services.AddTransient<BusinessEntityService>();
         //services.AddTransient<SpecialOfferService>();
-        //services.AddTransient<CultureService>();
         //services.AddTransient<PersonService>();
         //services.AddTransient<ContactTypeService>();
         //services.AddTransient<ScrapReasonService>();
