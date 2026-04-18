@@ -11,16 +11,34 @@ namespace AdventureAdmin.Ui.Business_Entity
     {
         private readonly AdventureWorksContext _context;
 
+        
+        private bool esModificacion = false;
+        private BusinessEntity entidadAEditar;
+
         public BusinessEntityForm(AdventureWorksContext context)
         {
             InitializeComponent();
             _context = context;
         }
 
+       
+        public void CargarDatos(BusinessEntity entidad)
+        {
+            esModificacion = true;
+            entidadAEditar = entidad;
+
+           
+            txtGuid.Text = entidad.Rowguid.ToString();
+
+           
+            this.Text = "Modificar Business Entity";
+            btnGuardar.Text = "Actualizar";
+        }
+
         private void BusinessEntityForm_Load(object sender, EventArgs e)
         {
-            // Opcional: Sugerir un Guid al cargar para facilitar la prueba
-            if (string.IsNullOrWhiteSpace(txtGuid.Text))
+            
+            if (!esModificacion && string.IsNullOrWhiteSpace(txtGuid.Text))
             {
                 txtGuid.Text = Guid.NewGuid().ToString();
             }
@@ -34,18 +52,29 @@ namespace AdventureAdmin.Ui.Business_Entity
             {
                 btnGuardar.Enabled = false;
 
-                // Crear la entidad con el Guid ingresado
-                var businessEntity = new AdventureAdmin.Data.Models.BusinessEntity
+                if (esModificacion)
                 {
-                    Rowguid = Guid.Parse(txtGuid.Text.Trim()),
-                    ModifiedDate = DateTime.Now
-                };
+                    // --- MODO MODIFICAR ---
+                    entidadAEditar.Rowguid = Guid.Parse(txtGuid.Text.Trim());
+                    entidadAEditar.ModifiedDate = DateTime.Now;
 
-                _context.BusinessEntities.Add(businessEntity);
+                    _context.BusinessEntities.Update(entidadAEditar);
+                }
+                else
+                {
+                   
+                    var businessEntity = new BusinessEntity
+                    {
+                        Rowguid = Guid.Parse(txtGuid.Text.Trim()),
+                        ModifiedDate = DateTime.Now
+                    };
+                    _context.BusinessEntities.Add(businessEntity);
+                }
+
                 await _context.SaveChangesAsync();
 
-                MessageBox.Show("Business Entity creada correctamente.", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(esModificacion ? "Actualizado correctamente." : "Creado correctamente.",
+                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -67,13 +96,11 @@ namespace AdventureAdmin.Ui.Business_Entity
             errorProvider1.Clear();
             bool valid = true;
 
-            // Validación de campo vacío
             if (string.IsNullOrWhiteSpace(txtGuid.Text))
             {
                 errorProvider1.SetError(txtGuid, "El campo RowGuid es obligatorio.");
                 valid = false;
             }
-            // Validación de formato Guid (muy importante para tu tabla)
             else if (!Guid.TryParse(txtGuid.Text.Trim(), out _))
             {
                 errorProvider1.SetError(txtGuid, "El formato del Guid no es válido.");
@@ -89,7 +116,6 @@ namespace AdventureAdmin.Ui.Business_Entity
             this.Close();
         }
 
-        // Métodos de eventos vacíos (si los tienes en el diseñador)
         private void txtGuid_TextChanged(object sender, EventArgs e) { }
     }
 }
